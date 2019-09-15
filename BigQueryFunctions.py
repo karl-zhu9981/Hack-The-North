@@ -54,10 +54,11 @@ class Bigquery_functions:
                    current_location['longitude'], current_location['latitude'])
         final_table_id = table_id + '_processed'
         self.create_table_from_query(query_2, dataset_id, final_table_id)
-        row_iter = self.convert_table_to_json(dataset_id, final_table_id)
-        for row in row_iter:
-            print(row.values())
+        locations = self.convert_table_to_json(dataset_id, final_table_id)
+        #for row in locations:
+            #print(row.values())
             # each row is json formatted data
+        return locations
 
     def convert_table_to_json(self, dataset_id, table_id):
         """
@@ -71,7 +72,7 @@ class Bigquery_functions:
         '''.format(dataset_id, table_id)
         self.create_table_from_query(query, dataset_id, table_id + '_json')
         # Collect the data as a json
-        table_id = '{0}.{1}.{2}'.format(project_id, dataset_id, table_id + '_json')
+        table_id = '{0}.{1}.{2}'.format(self.project_id, dataset_id, table_id + '_json')
         print(table_id)
         table = self.client.get_table(table_id)
         rows = self.client.list_rows(table)

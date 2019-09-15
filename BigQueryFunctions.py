@@ -51,7 +51,7 @@ class Bigquery_functions:
             )
         ORDER BY distance_km ASC
         '''.format(dataset_id, table_id_cleaned,
-                   current_location['latitude'], current_location['longitude'])
+                   current_location['longitude'], current_location['latitude'])
         final_table_id = table_id + '_processed'
         self.create_table_from_query(query_2, dataset_id, final_table_id)
         locations = self.convert_table_to_json(dataset_id, final_table_id)
@@ -92,11 +92,11 @@ class Bigquery_functions:
 
 if __name__ == '__main__':
     project_id = 'test-252915'
-    dataset_id = 'run_1'
-    table_id = 'Model1'
+    dataset_id = 'run_2'
+    table_id = 'model1_v6'
     current_location = {
-        'latitude': 45.2,
-        'longitude': 10.42
+        'latitude': 43.467998128,
+        'longitude': -80.537331184
     }
     service = Bigquery_functions(project_id, dataset_id, table_id, current_location)
     service.return_nearby_locations()

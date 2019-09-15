@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Matrix Recycling</title>
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+    </head>
+    <body class="recycleBack" style="font-family: Roboto; ; background-position: center; background-repeat: no-repeat; background-size:a">
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+              </button>
+              <p class="navbar-brand" href={{ url_for('htn') }}>Matrix Recycling</p>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a href="{{ url_for('recycle') }}">Recycle</a></li>
+                <li><a href="{{ url_for('ewaste') }}">What is E-Waste?</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div class="row">
+          <h1 class="col-sm-12" style="text-align: center; margin: 30px">Recycle. Make Money.</h1>
+              <div style="padding: 30px" style="text-align: center; margin: 20px">
+                  <p style="text-align: center; font-size: 18px; margin-bottom: 20px">It shouldn't be so hard to make a difference. Rest easy knowing you're doing your part. </p>
+                <p style="text-align: center">Enter your device model number and find the closest recycling drop to you.
+                <p style="text-align: center">Don't know how?<a href="https://www.howtogeek.com/294712/how-to-find-your-windows-pcs-serial-number/" target="_blank"> For Windows.</a><a href="https://support.apple.com/en-us/HT208200" target="_blank"> For iOS.</a> <a href="https://www.cyberciti.biz/faq/linux-getting-scsi-ide-harddisk-information/" target="_blank"> For Linux.</a> Or do a quick online <a href="https://duckduckgo.com" target="_blank">search</a>.</p>
+              </div>
+        </div>
+        <div class="form" style="text-align: center">
+            <form>
+                Enter the model number.
+                <input id="inputModel"  name="modelNumber" type="text" style="padding: 5px; margin: 5px; border-radius: 10px; background-color: #decec6">
+                <button type="button" style="padding: 5px; margin: 10px; border-radius: 10px; color:black; background-color:#decec6">Submit</button>
+            </form>
+        <div id="map" style="width: 600px; height: 400px; margin: 50px auto 20px"></div>
+        </div>
+    </body>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+
+    <script>
+      $(function() {
+        $('button').click(function() {
+          $.ajax({
+            url: '/recycle',
+            data: {
+              modelNumber: $('#inputModel').val()
+            },
+            type: 'POST',
+            success: function(response) {
+                response = JSON.parse(response);
+                L.geoJSON(response, {
+                  onEachFeature: onEachFeature,
+                }).addTo(map);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+          });
+        });
+      });
+      var map = L.map('map').fitWorld().zoomIn();
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={access_token}', { maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+          '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+          'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'mapbox.streets',
+        access_token: 'pk.eyJ1IjoiYWhsYXciLCJhIjoiY2swanhrdHBnMGZrdDNscWQwaTg0M2dxNyJ9.pHrMyo1Fw7cRLo6V4nh3lQ'
+      }).addTo(map);
+
+      function onEachFeature(feature, layer) {
+        // does this feature have a property named popupContent?
+        if (feature.properties && feature.properties.popupContent) {
+          layer.bindPopup(feature.properties.popupContent);
+        }
+      }
+
+      function onLocationFound(e) {
+        L.marker(e.latlng).addTo(map)
+      }
+
+      function onLocationError(e) {
+        alert(e.message);
+      }
+
+      map.on('locationfound', onLocationFound);
+      map.on('locationerror', onLocationError);
+
+      map.locate({setView: true, maxZoom: 16});
+
+      map.on('click', onMapClick);
+
+    </script>
+
+</html>

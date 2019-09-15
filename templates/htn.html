@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Matrix Recycling</title>
-        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="static/main.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -21,10 +21,10 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
               <ul class="nav navbar-nav">
-                <li><a href="htn.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="recycle.html">Recycle</a></li>
-                  <li><a href="ewaste.html">What is E-Waste?</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a href="{{ url_for('recycle') }}">Recycle</a></li>
+                <li><a href="{{ url_for('ewaste') }}">What is E-Waste?</a></li>
               </ul>
             </div>
           </div>

@@ -24,8 +24,11 @@ def to_geojson(row):
         }
     return point
 
-
 @app.route('/')
+def main_page():
+    return render_template('ewaste.html')
+
+@app.route('/htn')
 def htn():
     return render_template('htn.html')
 
@@ -48,6 +51,7 @@ def recycle():
 
         project_id = 'test-252915'
         dataset_id = 'run_1'
+        dataset_id = 'run_2'
         table_id = model
         current_location = {
             'latitude': 43.4638888889,

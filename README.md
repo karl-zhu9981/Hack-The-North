@@ -1,5 +1,9 @@
 # Hack-The-North
-E-Destination is an app designed to make recycling e-waste simple and rewarding. 
+E-Destination is an app designed to make recycling e-waste simple and rewarding.
+
+To start the app, run app.py. 
+terminal:
+>python3 app.py
 
 Design:
 
